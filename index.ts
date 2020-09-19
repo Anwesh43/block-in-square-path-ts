@@ -199,3 +199,25 @@ class BlockInSquare {
         this.curr.startUpdating(cb)
     }
 }
+
+class Renderer {
+    
+    animator : Animator = new Animator()
+    bis : BlockInSquare = new BlockInSquare()
+
+    render(context : CanvasRenderingContext2D) {
+        this.bis.draw(context)    
+    }
+
+    handleTap(cb : Function) {
+        this.bis.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.bis.update(() => {
+                    this.animator.stop()
+                    cb()
+                })  
+            })
+        })
+    }
+}
