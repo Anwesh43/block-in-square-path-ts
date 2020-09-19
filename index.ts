@@ -1,5 +1,3 @@
-import { ContextReplacementPlugin } from "webpack"
-
 const colors : Array<string> = [
     "#F44336",
     "#4CAF50",
