@@ -1,3 +1,5 @@
+import { ContextReplacementPlugin } from "webpack"
+
 const colors : Array<string> = [
     "#F44336",
     "#4CAF50",
@@ -12,6 +14,8 @@ const pathFactor : number = 3
 const blockSizeFactor : number = 3.4 
 const backColor : string = "#bdbdbd"
 const delay : number = 20
+const w : number = window.innerWidth 
+const h : number = window.innerHeight 
 
 class ScaleUtil {
 
@@ -45,5 +49,33 @@ class Animator {
             this.animated = false 
             clearInterval(this.interval)
         }
+    }
+}
+
+class DrawingUtil {
+
+    static drawBlockInSquare(context : CanvasRenderingContext2D, scale : number) {
+        const size : number = Math.min(w, h) / blockSizeFactor 
+        const pathSize : number = Math.min(w, h) / pathFactor 
+        const sf : number = ScaleUtil.sinify(scale)
+        context.save()
+        context.translate(w / 2, h / 2)
+        var deg : number = 0
+        var currSc = 0 
+        const bSize : number = size * ScaleUtil.divideScale(sf, 0, parts)
+        for (var j = 0; j < parts - 1; j++) {
+            const sfj : number = ScaleUtil.divideScale(sf, j + 1, parts)
+            deg += Math.PI / 2 * Math.floor(sfj)
+            currSc = sfj > 0 && sfj < 1 ? sfj : 0 
+        }
+        context.rotate(deg)
+        context.translate(-pathSize / 2 - bSize / 2, -pathSize / 2)
+        context.fillRect(pathSize * currSc, -bSize / 2, bSize, bSize)
+        context.restore() 
+    } 
+
+    static drawBISNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.fillStyle = colors[i]
+        DrawingUtil.drawBlockInSquare(context, scale)
     }
 }
