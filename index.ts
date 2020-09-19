@@ -52,6 +52,16 @@ class Animator {
 
 class DrawingUtil {
 
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        if (x1 == x2 && y1 == y2) {
+            return
+        }
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
     static drawBlockInSquare(context : CanvasRenderingContext2D, scale : number) {
         const size : number = Math.min(w, h) / blockSizeFactor 
         const pathSize : number = Math.min(w, h) / pathFactor 
@@ -65,16 +75,26 @@ class DrawingUtil {
             const sfj : number = ScaleUtil.divideScale(sf, j + 1, parts)
             deg += Math.PI / 2 * Math.floor(sfj)
             currSc = (sfj > 0 && sfj < 1) ? sfj : currSc
+            context.save()
+            context.rotate(j * Math.PI /2)
+            context.translate(-pathSize / 2, -pathSize / 2)
+            DrawingUtil.drawLine(context, 0, 0, pathSize * sfj, 0)
+            context.restore()
         }
         console.log(currSc)
+        context.save()
         context.rotate(deg)
         context.translate(-pathSize / 2 - bSize / 2, -pathSize / 2)
         context.fillRect(pathSize * currSc, -bSize / 2, bSize, bSize)
+        context.restore()
         context.restore() 
     } 
 
     static drawBISNode(context : CanvasRenderingContext2D, i : number, scale : number) {
         context.fillStyle = colors[i]
+        context.strokeStyle = colors[i]
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor 
         DrawingUtil.drawBlockInSquare(context, scale)
     }
 }
