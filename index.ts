@@ -8,8 +8,8 @@ const colors : Array<string> = [
 const parts : number = 5 
 const scGap : number = 0.02 / parts 
 const strokeFactor : number = 90
-const pathFactor : number = 3 
-const blockSizeFactor : number = 3.4 
+const pathFactor : number = 1.5
+const blockSizeFactor : number = 11.2 
 const backColor : string = "#bdbdbd"
 const delay : number = 20
 const w : number = window.innerWidth 
@@ -64,8 +64,9 @@ class DrawingUtil {
         for (var j = 0; j < parts - 1; j++) {
             const sfj : number = ScaleUtil.divideScale(sf, j + 1, parts)
             deg += Math.PI / 2 * Math.floor(sfj)
-            currSc = sfj > 0 && sfj < 1 ? sfj : 0 
+            currSc = (sfj > 0 && sfj < 1) ? sfj : currSc
         }
+        console.log(currSc)
         context.rotate(deg)
         context.translate(-pathSize / 2 - bSize / 2, -pathSize / 2)
         context.fillRect(pathSize * currSc, -bSize / 2, bSize, bSize)
